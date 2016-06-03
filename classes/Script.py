@@ -29,8 +29,6 @@ class Script:
         self.testCases.append(TestCase(path))
 
     def run(self):
-        print(self.name)
-        print('Running ' + str(len(self.testCases)) + ' test cases...')
         for test in self.testCases:
             child = subprocess.Popen(['python',os.path.join(self.path,'script.py')],stdin=open(test.getInPath(),'r'),stdout=subprocess.PIPE,stderr=subprocess.PIPE)
             infile = open(test.getInPath(),'r')
@@ -53,4 +51,3 @@ class Script:
                 test.data = results
             else:
                 test.setStatus(1)
-            print(test.name + ' ' + test.getStatus())

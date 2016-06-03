@@ -5,6 +5,7 @@ class Core:
     def __init__(self,rootdir):
         self.rootdir = rootdir
         self.scripts = {}
+        self.loadScripts()
     
     def loadScripts(self):
         path = os.path.join(self.rootdir, 'scripts')
