@@ -1,7 +1,5 @@
 from .TestCase import TestCase
-import os
-import subprocess
-import time
+import os, subprocess, time
 
 class Script:
     def __init__(self,path):

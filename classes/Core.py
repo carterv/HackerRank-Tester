@@ -1,5 +1,5 @@
 from .Script import Script
-import os
+import os, idlelib, sys, threading
 
 class Core:
     def __init__(self,rootdir):
@@ -17,8 +17,10 @@ class Core:
     def addScript(self,name):
         self.scripts[name] = Script(os.path.join(self.rootdir,'scripts',name))
 
-    def openScript(self):
-        pass
+    def openScript(self,name):
+        sys.argv = ['-e',os.path.join(self.scripts[name].path,'script.py')]
+        t = threading.Thread(target=idlelib.PyShell.main)
+        t.start()
 
     def runScript(self,name):
          self.scripts[name].run()

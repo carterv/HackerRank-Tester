@@ -4,7 +4,7 @@ import os
 def main():
     core = Core(os.path.split(os.path.realpath(__file__))[0])
     while True:
-        command = input('>').strip().split()
+        command = input('> ').strip().split()
         if (len(command) == 0):
             print('Invalid command')
         elif (command[0] == 'exit'):
@@ -21,14 +21,19 @@ def main():
             script = ' '.join(command[1:])
             n = str(len(core.scripts[script].testCases))
             print('Running ' + n + ' cases against \'' + script + '\'...')
-            core.runScript(script)
 
+            core.runScript(script)
+            
             passes = 0
             for test in core.scripts[script].testCases:
                 s = test.getStatus()
                 passes += s == 'PASSED'
                 print(test.name + ' ' + test.getStatus())
             print(str(passes) + '/' + n + ' test cases passed')
+        elif (command[0] == 'open'):
+            script = ' '.join(command[1:])
+            print('Opening ' + script + ' in IDLE...')
+            core.openScript(script)
         else:
             print('Invalid command')
 
