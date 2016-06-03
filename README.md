@@ -3,5 +3,5 @@ This is a program meant to organize and test solutions for challenges on hackerr
 
 In the future, the program will organize each solution in its own directory, and will run it against all tests in the test directory. Tests must be named as follows:
 
-input: "input*.txt"
-output: "output*.txt"
+input: "input\*.txt"
+output: "output\*.txt"
