@@ -1,5 +1,5 @@
 from .Script import Script
-import os, idlelib, sys, threading
+import os, sys, subprocess
 
 class Core:
     def __init__(self,rootdir):
@@ -18,9 +18,8 @@ class Core:
         self.scripts[name] = Script(os.path.join(self.rootdir,'scripts',name))
 
     def openScript(self,name):
-        sys.argv = ['-e',os.path.join(self.scripts[name].path,'script.py')]
-        t = threading.Thread(target=idlelib.PyShell.main)
-        t.start()
+        args = ['python',os.path.join(sys.exec_prefix,'Lib','idlelib','idle.py'),'-e',os.path.join(self.scripts[name].path,'script.py')]
+        subprocess.Popen(args,close_fds=True,creationflags=0x00000008) #DETACHED_PROCESS creation flag
 
     def runScript(self,name):
          self.scripts[name].run()
