@@ -7,9 +7,9 @@ def main():
     core = Core(os.path.split(os.path.realpath(__file__))[0])
 
     #GUI
-    #app = MainWindow(core)
-    #app.master.title("HackerRank Tester")
-    #app.mainloop()
+    app = MainWindow(core)
+    app.master.title("HackerRank Tester")
+    app.mainloop()
     
 
 

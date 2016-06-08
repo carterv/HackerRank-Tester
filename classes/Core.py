@@ -23,3 +23,9 @@ class Core:
 
     def runScript(self,name):
          self.scripts[name].run()
+
+    def getScripts(self):
+        return self.scripts.keys()
+
+    def getScript(self,name):
+        return self.scripts[name]
