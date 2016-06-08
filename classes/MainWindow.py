@@ -67,7 +67,8 @@ class MainWindow(Frame):
         self.widgets['TOptions'].pack(side=LEFT,expand=False)
 
     def populateProjects(self):
-        projects = self.core.getScripts()
+        projects = list(self.core.getScripts())
+        projects.sort()
         w = self.widgets['Projects']
         for p in projects:
             w.insert(w.size(),p)
