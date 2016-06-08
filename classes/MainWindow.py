@@ -32,12 +32,10 @@ class MainWindow(Frame):
         
         f3 = Frame(ft)
         f3.pack(side=TOP,expand=False,fill=X)
-        self.widgets['PNew'] = Button(f3,text='New')
-        self.widgets['PNew'].pack(side=LEFT,expand=False) 
-        self.widgets['PDelete'] = Button(f3,text='Delete')
-        self.widgets['PDelete'].pack(side=LEFT,expand=False)
-        self.widgets['PAdd'] = Button(f3,text='Add')
-        self.widgets['PAdd'].pack(side=LEFT,expand=False)
+        #self.widgets['PNew'] = Button(f3,text='New')
+        #self.widgets['PNew'].pack(side=LEFT,expand=False) 
+        #self.widgets['PDelete'] = Button(f3,text='Delete')
+        #self.widgets['PDelete'].pack(side=LEFT,expand=False)
         self.widgets['POpen'] = Button(f3,text='Open',command=self.openProject)
         self.widgets['POpen'].pack(side=LEFT,expand=False)
 
@@ -59,12 +57,12 @@ class MainWindow(Frame):
 
         f6 = Frame(fb)
         f6.pack(side=TOP,expand=False,fill=X)
-        self.widgets['TRun'] = Button(f6,text='Run')
+        self.widgets['TRun'] = Button(f6,text='Run',command=self.runTests)
         self.widgets['TRun'].pack(side=LEFT,expand=False)
-        self.widgets['TLoad'] = Button(f6,text='Load')
-        self.widgets['TLoad'].pack(side=LEFT,expand=False)
-        self.widgets['TOptions'] = Button(f6,text='Options')
-        self.widgets['TOptions'].pack(side=LEFT,expand=False)
+        #self.widgets['TLoad'] = Button(f6,text='Load')
+        #self.widgets['TLoad'].pack(side=LEFT,expand=False)
+        #self.widgets['TOptions'] = Button(f6,text='Options')
+        #self.widgets['TOptions'].pack(side=LEFT,expand=False)
 
     def populateProjects(self):
         projects = list(self.core.getScripts())
@@ -77,18 +75,30 @@ class MainWindow(Frame):
         try:
             w = event.widget
             name = w.get(int(w.curselection()[0]))
-            tests = [t.name for t in self.core.getScript(name).testCases]
-            w = self.widgets['TestCases']
-            w.delete(0,w.size())
-            for t in tests:
-                w.insert(w.size(),t)
+            self.reloadTests(name)
         except:
             pass
+
+    def reloadTests(self,name):
+        tests = [t.name + ' ' + t.getStatus() for t in self.core.getScript(name).testCases]
+        w = self.widgets['TestCases']
+        w.delete(0,w.size())
+        for t in tests:
+            w.insert(w.size(),t)
 
     def openProject(self):
         try:
             w = self.widgets['Projects']
             name = w.get(int(w.curselection()[0]))
             self.core.openScript(name)
+        except:
+            pass
+
+    def runTests(self):
+        try:
+            w = self.widgets['Projects']
+            name = w.get(int(w.curselection()[0]))
+            self.core.runScript(name)
+            self.reloadTests(name)
         except:
             pass
