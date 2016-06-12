@@ -1,4 +1,4 @@
-from classes.MainWindow import MainWindow
+from classes.WindowMain import WindowMain
 from classes.Core import Core
 import os
 
@@ -7,7 +7,7 @@ def main():
     core = Core(os.path.split(os.path.realpath(__file__))[0])
 
     #GUI
-    app = MainWindow(core)
+    app = WindowMain(core)
     app.master.title("HackerRank Tester")
     app.mainloop()
     

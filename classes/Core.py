@@ -15,7 +15,7 @@ class Core:
                 self.addScript(name)
 
     def addScript(self,name):
-        self.scripts[name] = Script(os.path.join(self.rootdir,'scripts',name))
+        self.scripts[name] = Script(os.path.join(self.rootdir,'projects',name))
 
     def openScript(self,name):
         args = ['python',os.path.join(sys.exec_prefix,'Lib','idlelib','idle.py'),'-e',os.path.join(self.scripts[name].path,'script.py')]
