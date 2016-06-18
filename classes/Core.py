@@ -8,7 +8,7 @@ class Core:
         self.loadScripts()
     
     def loadScripts(self):
-        path = os.path.join(self.rootdir, 'scripts')
+        path = os.path.join(self.rootdir, 'projects')
         for name in os.listdir(path):
             f = os.path.join(path,name)
             if (os.path.isdir(f)):
