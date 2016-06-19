@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter.ttk import *
+from .WindowAddProject import WindowAddProject
 
 class WindowMain(Frame):
     def __init__(self,core,master=None):
@@ -34,6 +35,8 @@ class WindowMain(Frame):
         f3.pack(side=TOP,expand=False,fill=X)
         self.widgets['POpen'] = Button(f3,text='Open',command=self.openProject)
         self.widgets['POpen'].pack(side=LEFT,expand=False)
+        self.widgets['PNew'] = Button(f3,text='New',command=self.newProject)
+        self.widgets['PNew'].pack(side=LEFT,expand=False)
 
         #Test Case Pane Widgets
         fbottom = Frame(self.master)
@@ -59,7 +62,7 @@ class WindowMain(Frame):
     def populateProjects(self):
         w = self.widgets['Projects']
         w.delete(0,w.size())
-        projects = list(self.core.getScripts())
+        projects = list(self.core.getProjects())
         projects.sort()
         for p in projects:
             w.insert(w.size(),p)
@@ -73,7 +76,7 @@ class WindowMain(Frame):
             pass
 
     def reloadTests(self,name):
-        tests = [t.name + ' ' + t.getStatus() for t in self.core.getScript(name).testCases]
+        tests = [t.name + ' ' + t.getStatus() for t in self.core.getProject(name).testCases]
         w = self.widgets['TestCases']
         w.delete(0,w.size())
         for t in tests:
@@ -83,15 +86,19 @@ class WindowMain(Frame):
         try:
             w = self.widgets['Projects']
             name = w.get(int(w.curselection()[0]))
-            self.core.openScript(name)
+            self.core.openProject(name)
         except:
             pass
+
+    def newProject(self):
+        w = WindowAddProject(self.master)
+        self.master.wait_window(w.master)
 
     def runTests(self):
         try:
             w = self.widgets['Projects']
             name = w.get(int(w.curselection()[0]))
-            self.core.runScript(name)
+            self.core.runProject(name)
             self.reloadTests(name)
         except:
             pass

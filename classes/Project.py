@@ -1,7 +1,7 @@
 from .TestCase import TestCase
 import os, subprocess, time
 
-class Script:
+class Project:
     def __init__(self,path):
         self.name = path.split(os.sep)[-1]
         self.path = path
