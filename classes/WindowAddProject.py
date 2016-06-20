@@ -54,7 +54,7 @@ class WindowAddProject(Toplevel):
         pass
 
     def verify(self,name):
-        valid = 'abcdefghijklmnopqrstuvwxyz0123456789 '
+        valid = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_() '
         sname = set(name)
         for c in sname:
             if not c in valid:
