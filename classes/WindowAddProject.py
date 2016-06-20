@@ -8,6 +8,7 @@ class WindowAddProject(Toplevel):
         self.master.title('New Project')
         self.master.resizable(0,0)
         self.master.geometry('300x90')
+        self.master.focus_force()
         self.widgets = {}
         self.createWidgets()
 
@@ -24,6 +25,8 @@ class WindowAddProject(Toplevel):
         f2.pack(side=TOP,expand=False,fill=X)
         self.widgets['NEntry'] = Entry(f2)
         self.widgets['NEntry'].pack(side=TOP,fill=X,padx=1,pady=1)
+        self.widgets['NEntry'].bind('<Return>',self.createProjectEvent)
+        self.widgets['NEntry'].focus_set()
 
         f3 = Frame(ftop)
         f3.pack(side=TOP,expand=False,fill=X)
@@ -43,17 +46,22 @@ class WindowAddProject(Toplevel):
 
     def createProject(self):
         name = self.widgets['NEntry'].get()
-        if (name == '' or not self.verify(name)):
+        if (not self.verify(name)):
             return
         self.core.addProject(name)
         self.master.destroy()
         if (self.widgets['Checkvar'].get()):
             self.core.openProject(name)
+            
+    def createProjectEvent(self,event):
+        self.createProject()
 
     def cancel(self):
-        pass
+        self.master.destroy()
 
     def verify(self,name):
+        if len(name) > 64 or len(name) == 0:
+            return False
         valid = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_() '
         sname = set(name)
         for c in sname:
