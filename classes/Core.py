@@ -1,5 +1,5 @@
 from .Project import Project
-import os, sys, subprocess
+import os, sys, subprocess, shutil
 
 class Core:
     def __init__(self,rootdir):
@@ -20,6 +20,11 @@ class Core:
     def openProject(self,name):
         args = ['python',os.path.join(sys.exec_prefix,'Lib','idlelib','idle.py'),'-e',os.path.join(self.projects[name].path,'script.py')]
         subprocess.Popen(args,close_fds=True,creationflags=0x00000008) #DETACHED_PROCESS creation flag
+    
+    def deleteProject(self,name):
+        path = self.projects[name].path
+        shutil.rmtree(path)
+        del self.projects[name]
 
     def runProject(self,name):
          self.projects[name].run()

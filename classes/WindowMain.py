@@ -37,6 +37,8 @@ class WindowMain(Frame):
         self.widgets['POpen'].pack(side=LEFT,expand=False)
         self.widgets['PNew'] = Button(f3,text='New',command=self.newProject)
         self.widgets['PNew'].pack(side=LEFT,expand=False)
+        self.widgets['PDelete'] = Button(f3,text='Delete',command=self.deleteProject)
+        self.widgets['PDelete'].pack(side=LEFT,expand=False)
 
         #Test Case Pane Widgets
         fbottom = Frame(self.master)
@@ -91,8 +93,18 @@ class WindowMain(Frame):
             pass
 
     def newProject(self):
-        w = WindowAddProject(self.master)
+        w = WindowAddProject(self.core,self)
         self.master.wait_window(w.master)
+        self.populateProjects()
+
+    def deleteProject(self):
+        try:
+            w = self.widgets['Projects']
+            name = w.get(int(w.curselection()[0]))
+            self.core.deleteProject(name)
+            self.populateProjects()
+        except:
+            pass
 
     def runTests(self):
         try:
