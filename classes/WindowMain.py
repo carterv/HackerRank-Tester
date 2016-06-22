@@ -1,11 +1,13 @@
 from tkinter import *
 from tkinter.ttk import *
 from .WindowAddProject import WindowAddProject
+from .WindowAddTestCase import WindowAddTestCase
 
 class WindowMain(Frame):
     def __init__(self,core,master=None):
         Frame.__init__(self,master)
         self.core = core
+        self.curselection = None
         self.master.resizable(0,0)
         self.master.geometry('600x420')
         self.pack(expand=False)
@@ -60,6 +62,8 @@ class WindowMain(Frame):
         f6.pack(side=TOP,expand=False,fill=X)
         self.widgets['TRun'] = Button(f6,text='Run',command=self.runTests)
         self.widgets['TRun'].pack(side=LEFT,expand=False)
+        self.widgets['TNew'] = Button(f6,text='New',command=lambda:self.newTest() if self.curselection else None)
+        self.widgets['TNew'].pack(side=LEFT,expand=False)
 
     def populateProjects(self):
         w = self.widgets['Projects']
@@ -73,9 +77,10 @@ class WindowMain(Frame):
         try:
             w = event.widget
             name = w.get(int(w.curselection()[0]))
+            self.curselection = name
             self.reloadTests(name)
         except:
-            pass
+            self.curselection = None
 
     def reloadTests(self,name):
         tests = [t.name + ' ' + t.getStatus() for t in self.core.getProject(name).testCases]
@@ -85,12 +90,9 @@ class WindowMain(Frame):
             w.insert(w.size(),t)
 
     def openProject(self):
-        try:
-            w = self.widgets['Projects']
-            name = w.get(int(w.curselection()[0]))
-            self.core.openProject(name)
-        except:
-            pass
+        w = self.widgets['Projects']
+        name = self.curselection
+        self.core.openProject(name)
 
     def newProject(self):
         w = WindowAddProject(self.core,self)
@@ -98,19 +100,22 @@ class WindowMain(Frame):
         self.populateProjects()
 
     def deleteProject(self):
-        try:
-            w = self.widgets['Projects']
-            name = w.get(int(w.curselection()[0]))
-            self.core.deleteProject(name)
-            self.populateProjects()
-        except:
-            pass
+        w = self.widgets['Projects']
+        name = self.curselection
+        self.core.deleteProject(name)
+        self.populateProjects()
 
     def runTests(self):
-        try:
-            w = self.widgets['Projects']
-            name = w.get(int(w.curselection()[0]))
-            self.core.runProject(name)
-            self.reloadTests(name)
-        except:
-            pass
+        w = self.widgets['Projects']
+        name = self.curselection
+        self.core.runProject(name)
+        self.reloadTests(name)
+
+    def newTest(self):
+        nw = self.widgets['Projects']
+        name = self.curselection
+        
+        w = WindowAddTestCase(self.core,name,self)
+        self.master.wait_window(w.master)
+        
+        self.reloadTests(name)

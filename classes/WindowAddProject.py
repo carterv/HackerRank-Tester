@@ -5,7 +5,7 @@ class WindowAddProject(Toplevel):
     def __init__(self,core,master=None):
         self.master = Toplevel(master)
         self.core = core
-        self.master.title('New Project')
+        self.master.title('New project')
         self.master.resizable(0,0)
         self.master.geometry('300x90')
         self.master.focus_force()
