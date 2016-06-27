@@ -5,10 +5,13 @@ class WindowAddProject(Toplevel):
     def __init__(self,core,master=None):
         self.master = Toplevel(master)
         self.core = core
+        
         self.master.title('New project')
         self.master.resizable(0,0)
         self.master.geometry('300x90')
         self.master.focus_force()
+        self.master.bind('<Control-w>',lambda e:self.master.destroy())
+        
         self.widgets = {}
         self.createWidgets()
 
@@ -25,7 +28,7 @@ class WindowAddProject(Toplevel):
         f2.pack(side=TOP,expand=False,fill=X)
         self.widgets['NEntry'] = Entry(f2)
         self.widgets['NEntry'].pack(side=TOP,fill=X,padx=1,pady=1)
-        self.widgets['NEntry'].bind('<Return>',self.createProjectEvent)
+        self.widgets['NEntry'].bind('<Return>',lambda e:self.createProject())
         self.widgets['NEntry'].focus_set()
 
         f3 = Frame(ftop)
@@ -52,9 +55,6 @@ class WindowAddProject(Toplevel):
         self.master.destroy()
         if (self.widgets['Checkvar'].get()):
             self.core.openProject(name)
-            
-    def createProjectEvent(self,event):
-        self.createProject()
 
     def cancel(self):
         self.master.destroy()

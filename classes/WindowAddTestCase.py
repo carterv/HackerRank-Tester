@@ -7,10 +7,12 @@ class WindowAddTestCase(Frame):
         self.master
         self.core = core
         self.project = core.getProject(projectname)
+        
         self.master.title('New test case for ' + projectname)
-        #self.master.resizable(0,0)
-        #self.master.geometry('400x400')
+        self.master.resizable(0,0)
         self.master.focus_force()
+        self.master.bind('<Control-w>',lambda e:self.master.destroy())
+        
         self.widgets = {}
         self.createWidgets()
 
@@ -48,7 +50,26 @@ class WindowAddTestCase(Frame):
 
         fbottom = Frame(self.master)
         fbottom.pack(side=BOTTOM,expand=False,fill=X)
-        self.widgets['Create'] = Button(fbottom,text='Create')
+        self.widgets['Create'] = Button(fbottom,text='Create',command=self.createProject)
         self.widgets['Create'].pack(side=LEFT)
-        self.widgets['Cancel'] = Button(fbottom,text='Cancel')
+        self.widgets['Cancel'] = Button(fbottom,text='Cancel',command=self.cancel)
         self.widgets['Cancel'].pack(side=LEFT)
+
+        createProject = lambda e:self.createProject()
+
+        self.widgets['IText'].focus_set()
+        self.widgets['IText'].bind('<Return>',createProject)
+        self.widgets['IText'].bind('<Tab>',self.changeFocus)
+        self.widgets['OText'].bind('<Return>',createProject)
+        self.widgets['OText'].bind('<Tab>',self.changeFocus)
+
+    def createProject(self):
+        self.project.createTestCase(self.widgets['IText'].get('0.0'),self.widgets['OText'].get('0.0'))
+        self.master.destroy()
+
+    def cancel(self):
+        self.master.destroy()
+
+    def changeFocus(self,event):
+        event.widget.tk_focusNext().focus()
+        return 'break'

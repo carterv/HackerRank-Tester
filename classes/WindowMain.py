@@ -7,9 +7,13 @@ class WindowMain(Frame):
     def __init__(self,core,master=None):
         Frame.__init__(self,master)
         self.core = core
-        self.curselection = None
+        self.projselection = None
+        self.testselection = None
+        
         self.master.resizable(0,0)
         self.master.geometry('600x420')
+        self.master.bind('<Control-w>',lambda e:self.master.destroy())
+        
         self.pack(expand=False)
         self.widgets = {}
         self.createWidgets()
@@ -32,6 +36,7 @@ class WindowMain(Frame):
         self.widgets['Projects'] = Listbox(f2,yscrollcommand=self.widgets['PScroll'].set)
         self.widgets['Projects'].pack(side=TOP,fill=X,padx=1,pady=1)
         self.widgets['Projects'].bind('<<ListboxSelect>>',self.loadTests)
+        self.widgets['Projects'].bind('<Return>',lambda e:self.openProject())
         
         f3 = Frame(ftop)
         f3.pack(side=TOP,expand=False,fill=X)
@@ -57,13 +62,16 @@ class WindowMain(Frame):
         self.widgets['TScroll'].pack(side=RIGHT,fill=Y,pady=1)
         self.widgets['TestCases'] = Listbox(f5,yscrollcommand=self.widgets['TScroll'].set)
         self.widgets['TestCases'].pack(side=TOP,fill=X,padx=1,pady=1)
+        self.widgets['TestCases'].bind('<<ListboxSelect>>',self.selectTestCase)
 
         f6 = Frame(fbottom)
         f6.pack(side=TOP,expand=False,fill=X)
         self.widgets['TRun'] = Button(f6,text='Run',command=self.runTests)
         self.widgets['TRun'].pack(side=LEFT,expand=False)
-        self.widgets['TNew'] = Button(f6,text='New',command=lambda:self.newTest() if self.curselection else None)
+        self.widgets['TNew'] = Button(f6,text='New',command=lambda:self.newTest() if self.projselection else None)
         self.widgets['TNew'].pack(side=LEFT,expand=False)
+        self.widgets['TDelete'] = Button(f6,text='Delete',command=lambda:self.deleteTest() if self.testselection else None)
+        self.widgets['TDelete'].pack(side=LEFT,expand=False)
 
     def populateProjects(self):
         w = self.widgets['Projects']
@@ -77,10 +85,12 @@ class WindowMain(Frame):
         try:
             w = event.widget
             name = w.get(int(w.curselection()[0]))
-            self.curselection = name
+            self.projselection = name
+            self.testselection = None
             self.reloadTests(name)
         except:
-            self.curselection = None
+            self.projselection = None
+            self.testselection = None
 
     def reloadTests(self,name):
         tests = [t.name + ' ' + t.getStatus() for t in self.core.getProject(name).testCases]
@@ -90,9 +100,8 @@ class WindowMain(Frame):
             w.insert(w.size(),t)
 
     def openProject(self):
-        w = self.widgets['Projects']
-        name = self.curselection
-        self.core.openProject(name)
+        pname = self.projselection
+        self.core.openProject(pname)
 
     def newProject(self):
         w = WindowAddProject(self.core,self)
@@ -100,22 +109,33 @@ class WindowMain(Frame):
         self.populateProjects()
 
     def deleteProject(self):
-        w = self.widgets['Projects']
-        name = self.curselection
-        self.core.deleteProject(name)
+        pname = self.projselection
+        self.core.deleteProject(pname)
         self.populateProjects()
 
+    def selectTestCase(self,event):
+        try:
+            w = event.widget
+            name = w.get(int(w.curselection()[0]))
+            self.testselection = name.split()[0]
+        except:
+            self.testselection = None
+
     def runTests(self):
-        w = self.widgets['Projects']
-        name = self.curselection
-        self.core.runProject(name)
-        self.reloadTests(name)
+        name = self.projselection
+        self.core.runProject(pname)
+        self.reloadTests(pname)
 
     def newTest(self):
-        nw = self.widgets['Projects']
-        name = self.curselection
+        pname = self.projselection
         
-        w = WindowAddTestCase(self.core,name,self)
+        w = WindowAddTestCase(self.core,pname,self)
         self.master.wait_window(w.master)
         
-        self.reloadTests(name)
+        self.reloadTests(pname)
+
+    def deleteTest(self):
+        pname = self.projselection
+        tname = self.testselection
+        self.core.getProject(pname).deleteTestCase(tname)
+        self.reloadTests(pname)

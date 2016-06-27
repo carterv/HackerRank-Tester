@@ -13,7 +13,7 @@ class Project:
                 os.makedirs(p)
         path = os.path.join(self.path,'script.py')
         if (not os.path.exists(path)):
-            open(path,"w+")
+            open(path,'w+')
         self.loadTestCases()
 
     def loadTestCases(self):
@@ -25,6 +25,29 @@ class Project:
 
     def addTestCase(self,path):
         self.testCases.append(TestCase(path))
+
+    def createTestCase(self,inputData,outputData):
+        tmax = max([int(t.name) if t.name.isdigit() else 0 for t in self.testCases])+1
+        tmax = '0'+str(tmax) if tmax%10==tmax else str(tmax)
+        
+        inp = os.path.join(self.path,'tests','input','input'+tmax+'.txt')
+        inf = open(inp,'w+')
+        inf.write(outputData)
+        inf.close()
+        
+        outp = os.path.join(self.path,'tests','output','output'+tmax+'.txt')
+        outf = open(outp,'w+')
+        outf.write(inputData)
+        outf.close()
+
+        self.addTestCase(inp)
+        
+    def deleteTestCase(self,name):
+        i = [t.name for t in self.testCases].index(name)
+        tc = self.testCases[i]
+        os.remove(tc.getInPath())
+        os.remove(tc.getOutPath())
+        del self.testCases[i]
 
     def run(self):
         for test in self.testCases:
