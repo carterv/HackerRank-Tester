@@ -36,6 +36,7 @@ class WindowMain(Frame):
         self.widgets['Projects'] = Listbox(f2,yscrollcommand=self.widgets['PScroll'].set)
         self.widgets['Projects'].pack(side=TOP,fill=X,padx=1,pady=1)
         self.widgets['Projects'].bind('<<ListboxSelect>>',self.loadTests)
+        self.widgets['Projects'].bind('<Double-1>',lambda e:self.openProject())
         self.widgets['Projects'].bind('<Return>',lambda e:self.openProject())
         
         f3 = Frame(ftop)
@@ -63,6 +64,7 @@ class WindowMain(Frame):
         self.widgets['TestCases'] = Listbox(f5,yscrollcommand=self.widgets['TScroll'].set)
         self.widgets['TestCases'].pack(side=TOP,fill=X,padx=1,pady=1)
         self.widgets['TestCases'].bind('<<ListboxSelect>>',self.selectTestCase)
+        self.widgets['TestCases'].bind('<Double-1>',lambda e:self.showError())
 
         f6 = Frame(fbottom)
         f6.pack(side=TOP,expand=False,fill=X)
@@ -122,7 +124,7 @@ class WindowMain(Frame):
             self.testselection = None
 
     def runTests(self):
-        name = self.projselection
+        pname = self.projselection
         self.core.runProject(pname)
         self.reloadTests(pname)
 
@@ -139,3 +141,8 @@ class WindowMain(Frame):
         tname = self.testselection
         self.core.getProject(pname).deleteTestCase(tname)
         self.reloadTests(pname)
+
+    def showError(self):
+        pname = self.projselection
+        tname = self.testselection
+        print(self.core.getProject(pname).getTestCase(tname).data)

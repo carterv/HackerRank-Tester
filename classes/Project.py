@@ -27,20 +27,24 @@ class Project:
         self.testCases.append(TestCase(path))
 
     def createTestCase(self,inputData,outputData):
-        tmax = max([int(t.name) if t.name.isdigit() else 0 for t in self.testCases])+1
+        tmax = max([int(t.name) if t.name.isdigit() else 0 for t in self.testCases] if len(self.testCases)>0 else [-1])+1
         tmax = '0'+str(tmax) if tmax%10==tmax else str(tmax)
         
         inp = os.path.join(self.path,'tests','input','input'+tmax+'.txt')
         inf = open(inp,'w+')
-        inf.write(outputData)
+        inf.write(inputData)
         inf.close()
         
         outp = os.path.join(self.path,'tests','output','output'+tmax+'.txt')
         outf = open(outp,'w+')
-        outf.write(inputData)
+        outf.write(outputData)
         outf.close()
 
         self.addTestCase(inp)
+
+    def getTestCase(self,name):
+        i = [t.name for t in self.testCases].index(name)
+        return self.testCases[i]
         
     def deleteTestCase(self,name):
         i = [t.name for t in self.testCases].index(name)
@@ -72,3 +76,4 @@ class Project:
                 test.data = results
             else:
                 test.setStatus(1)
+                test.data = results

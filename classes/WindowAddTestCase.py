@@ -33,7 +33,9 @@ class WindowAddTestCase(Frame):
         self.widgets['IScrollX'].pack(side=BOTTOM,fill=X,padx=1)
         self.widgets['IText'] = Text(f2,xscrollcommand=self.widgets['IScrollX'].set,yscrollcommand=self.widgets['IScrollY'].set)
         self.widgets['IText'].pack(side=TOP,padx=1,pady=1)
-
+        self.widgets['IText'].focus_set()
+        self.widgets['IText'].bind('<Tab>',self.changeFocus)
+        
         f3 = Frame(ftop)
         f3.pack(side=RIGHT,expand=False)
         self.widgets['OLabel'] = Label(f3,text='Output',justify=LEFT)
@@ -47,6 +49,7 @@ class WindowAddTestCase(Frame):
         self.widgets['OScrollX'].pack(side=BOTTOM,fill=X,padx=1)
         self.widgets['OText'] = Text(f4,xscrollcommand=self.widgets['OScrollX'].set,yscrollcommand=self.widgets['OScrollY'].set)
         self.widgets['OText'].pack(side=TOP,padx=1,pady=1)
+        self.widgets['OText'].bind('<Tab>',self.changeFocus)
 
         fbottom = Frame(self.master)
         fbottom.pack(side=BOTTOM,expand=False,fill=X)
@@ -57,14 +60,8 @@ class WindowAddTestCase(Frame):
 
         createProject = lambda e:self.createProject()
 
-        self.widgets['IText'].focus_set()
-        self.widgets['IText'].bind('<Return>',createProject)
-        self.widgets['IText'].bind('<Tab>',self.changeFocus)
-        self.widgets['OText'].bind('<Return>',createProject)
-        self.widgets['OText'].bind('<Tab>',self.changeFocus)
-
     def createProject(self):
-        self.project.createTestCase(self.widgets['IText'].get('0.0'),self.widgets['OText'].get('0.0'))
+        self.project.createTestCase(self.widgets['IText'].get('1.0',END),self.widgets['OText'].get('1.0',END))
         self.master.destroy()
 
     def cancel(self):
