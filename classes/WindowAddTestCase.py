@@ -34,7 +34,8 @@ class WindowAddTestCase(Frame):
         self.widgets['IText'] = Text(f2,xscrollcommand=self.widgets['IScrollX'].set,yscrollcommand=self.widgets['IScrollY'].set)
         self.widgets['IText'].pack(side=TOP,padx=1,pady=1)
         self.widgets['IText'].focus_set()
-        self.widgets['IText'].bind('<Tab>',self.changeFocus)
+        self.widgets['IText'].bind('<Tab>',self.focusNext)
+        self.widgets['IText'].bind('<Shift-Tab>',self.focusPrev)
         
         f3 = Frame(ftop)
         f3.pack(side=RIGHT,expand=False)
@@ -49,7 +50,8 @@ class WindowAddTestCase(Frame):
         self.widgets['OScrollX'].pack(side=BOTTOM,fill=X,padx=1)
         self.widgets['OText'] = Text(f4,xscrollcommand=self.widgets['OScrollX'].set,yscrollcommand=self.widgets['OScrollY'].set)
         self.widgets['OText'].pack(side=TOP,padx=1,pady=1)
-        self.widgets['OText'].bind('<Tab>',self.changeFocus)
+        self.widgets['OText'].bind('<Tab>',self.focusNext)
+        self.widgets['OText'].bind('<Shift-Tab>',self.focusPrev)
 
         fbottom = Frame(self.master)
         fbottom.pack(side=BOTTOM,expand=False,fill=X)
@@ -67,6 +69,10 @@ class WindowAddTestCase(Frame):
     def cancel(self):
         self.master.destroy()
 
-    def changeFocus(self,event):
+    def focusNext(self,event):
         event.widget.tk_focusNext().focus()
+        return 'break'
+
+    def focusPrev(self,event):
+        event.widget.tk_focusPrev().focus()
         return 'break'
